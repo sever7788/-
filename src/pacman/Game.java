@@ -63,7 +63,7 @@ public class Game {
         scene = new Scene(root, 900, 576);
         map = new MapData(root, objects, ghosts, this);
         map.drawMap();
-        capital = 200;
+        capital = 0;
         pacman = new Pacman(root, scene);
         AnimationTimer timer = new AnimationTimer() {
             @Override
