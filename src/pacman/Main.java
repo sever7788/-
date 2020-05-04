@@ -10,7 +10,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setTitle("Pacman");
-        Game game = new Game(primaryStage);
         Menu menu = new Menu(primaryStage, game);
         menu.initMenu();
         primaryStage.show();

@@ -33,7 +33,6 @@ public class SpriteAnimation extends Transition {
         setCycleDuration(duration);
         setCycleCount(Animation.INDEFINITE);
         setInterpolator(Interpolator.LINEAR);
-        this.imageView.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }
     public void reflectImage(int newDiection){
 

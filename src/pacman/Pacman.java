@@ -1,16 +1,7 @@
 package pacman;
-
-import javafx.animation.Animation;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.util.Duration;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-
 import java.util.HashMap;
 
 public class Pacman extends NPC {
@@ -18,11 +9,13 @@ public class Pacman extends NPC {
     public int followingDirection = 2;
     public Pacman(Pane pane, Scene scene){
         super(pane, "./img/tileset.png");
+        initNPC();
         imageView.setFitWidth(30);
         imageView.setFitHeight(30);
         scene.setOnKeyPressed(event->keys.put(event.getCode(),true));
         scene.setOnKeyReleased(event-> { keys.put(event.getCode(), false);
         });
+        pane.getChildren().add(imageView);
         animation.play();
     }
 

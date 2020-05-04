@@ -43,16 +43,15 @@ public class Menu {
         StackPane.setAlignment(imgLogo, Pos.TOP_CENTER);
 
         MenuItem newGame = new MenuItem("НОВАЯ ИГРА");
-        MenuItem options = new MenuItem("НАСТРОЙКИ");
         MenuItem exitGame = new MenuItem("ВЫХОД");
         SubMenu mainMenu = new SubMenu(
-                newGame, options, exitGame
+                newGame, exitGame
         );
         MenuBox menuBox = new MenuBox(mainMenu);
         menuBox.setTranslateX(250);
         menuBox.setTranslateY(200);
 
-        newGame.setOnMouseClicked(event->game.initGame());
+        newGame.setOnMouseClicked(event->{game = new Game(stage, this);game.initGame();});
         exitGame.setOnMouseClicked(event->System.exit(0));
         root.getChildren().addAll(imgFon,imgLogo, menuBox);
 

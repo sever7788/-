@@ -9,12 +9,12 @@ import javafx.util.Duration;
 
 public class NPC {
     Image IMAGE = null;
-    int COUNT = 3;
-    int COLUMNS = 3;
-    int OFFSET_X = 0;
-    int OFFSET_Y = 0;
-    int WIDTH = 32;
-    int HEIGHT = 32;
+    public int COUNT = 3;
+    public int COLUMNS = 3;
+    public int OFFSET_X = 0;
+    public int OFFSET_Y = 0;
+    public int WIDTH = 32;
+    public int HEIGHT = 32;
     ImageView imageView;
     SpriteAnimation animation;
     Pane pane;
@@ -22,15 +22,16 @@ public class NPC {
         this.IMAGE = new Image(getClass().getResourceAsStream(imageName));
         this.pane = pane;
         imageView = new ImageView(IMAGE);
+    }
+
+    public void initNPC(){
         imageView.setViewport(new Rectangle2D(OFFSET_X,OFFSET_Y,WIDTH,HEIGHT));
         animation = new SpriteAnimation(
                 imageView,
                 Duration.millis(300),
                 COUNT, COLUMNS,
                 OFFSET_X,OFFSET_Y,WIDTH, HEIGHT);
-        animation.play();
     }
-
 
 
     public void moveX(int x){

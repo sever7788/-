@@ -1,40 +1,70 @@
 package pacman;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.FadeTransition;
+import javafx.geometry.Insets;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
 public class Game {
-    Pacman pacman;
-    Stage stage;
-    Scene scene;
-    MapData map;
-    Image mapImg;
-    Pane root;
-    ArrayList<Block>objects = new ArrayList<>();
+    public Pacman pacman;
+    public Stage stage;
+    public Scene scene;
+    public MapData map;
+    public Label labelCoin;
+    public int coins = 0;
+    public int capital = 0;
+    public Image imageWin;
+    public Image imageLose;
+    public ImageView imageViewWin;
+    public ImageView imageViewLose;
+    public Pane root;
+    public ArrayList<Block>objects = new ArrayList<>();
+    public ArrayList<Ghost>ghosts = new ArrayList<>();
     boolean flX = true;
     boolean flY = false;
-    Game(Stage stage){
+    boolean lose = false;
+    boolean gameEnd = false;
+    boolean ghostMode = false;
+    public Menu menu;
+    Game(Stage stage, Menu menu){
+        this.menu = menu;
         this.stage = stage;
     }
+
     public void initGame(){
-        mapImg = new Image(getClass().getResourceAsStream("./img/map.png"));
+
+        imageWin = new Image(getClass().getResourceAsStream("./img/win.png"));
+        imageLose = new Image(getClass().getResourceAsStream("./img/lose.png"));
+        imageViewWin = new ImageView(imageWin);
+        imageViewLose = new ImageView(imageLose);
+        imageViewWin.setViewport(new Rectangle2D(0,0,512,394));
+        imageViewLose.setViewport(new Rectangle2D(0,0,512,286));
+        labelCoin = new Label("bitCoins: "+capital+"/"+coins);
+        labelCoin.setTranslateY(-7);
+        labelCoin.setFont(Font.font("mv boli",24));
+        labelCoin.setTextFill(Color.YELLOW);
         this.root = new Pane();
-        scene = new Scene(root, 900, 600);
-
-        pacman = new Pacman(root, scene);
-
-        map = new MapData(root, mapImg, objects);
+        root.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        scene = new Scene(root, 900, 576);
+        map = new MapData(root, objects, ghosts, this);
         map.drawMap();
-        root.getChildren().addAll(pacman.imageView);
-        pacman.imageView.setTranslateX(33);
-        pacman.imageView.setTranslateY(33);
-        stage.setScene(scene);
+        capital = 200;
+        pacman = new Pacman(root, scene);
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -42,26 +72,81 @@ public class Game {
             }
         };
         timer.start();
+        root.getChildren().addAll(labelCoin);
+        pacman.imageView.setTranslateX(33);
+        pacman.imageView.setTranslateY(65);
+        stage.setScene(scene);
     }
+    public void end(){
+        gameEnd = true;
+        Pane root = new Pane();
+        scene = new Scene(root, 900, 576);
+        root.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY)));
+        if(!lose) {
+            root.getChildren().add(imageViewWin);
+            imageViewWin.setTranslateX(194);
+            imageViewWin.setTranslateY(100);
+            stage.setScene(scene);
 
+        }else{
+            root.getChildren().add(imageViewLose);
+            imageViewLose.setTranslateX(194);
+            imageViewLose.setTranslateY(100);
+            stage.setScene(scene);
+        }
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                stage.setScene(menu.scene);
+                menu.game = null;
+            }
+        });
+    }
     public void check(int direction){
-        for(int indexObject = 0; indexObject < objects.size();indexObject++)
-            if(pacman.imageView.getBoundsInParent().intersects(objects.get(indexObject).imageView.getBoundsInParent())){
-                Block block = objects.get(indexObject);
-                if(block.blockType == '1'){
+        Block block = null, removeBlock = null;
+        int removeIndex = 0;
+        for(int indexObject = 0; indexObject < objects.size();indexObject++){
+            block = objects.get(indexObject);
+            if(pacman.imageView.getBoundsInParent().intersects(block.imageView.getBoundsInParent())){
+                if(block.blockType == '1' ||block.blockType == 'd'){
                     switch(direction){
                         case 1: flY=false; pacman.moveY(2);  break;
                         case 2: flX=false; pacman.moveX(-2); break;
                         case 3: flY=false; pacman.moveY(-2); break;
                         case 4: flX=false; pacman.moveX(2);  break;
                     }
-
                 }
-                if(block.blockType == '2'){
-                    block.pane.getChildren().remove(block.imageView);
-                    objects.remove(indexObject);
+                if(block.blockType == '2'|| block.blockType == 'z'){
+                    removeBlock = block;
+                    removeIndex = indexObject;
                 }
             }
+            }
+
+        if(!gameEnd&&(coins <= capital&&pacman.imageView.getBoundsInParent().intersects(map.imageView.getBoundsInParent())||lose)){
+           end();
+        }
+        if(removeBlock!=null) {
+            char symbol = removeBlock.blockType;
+            if(symbol == '2')
+            capital++;
+            else ghostMode = true;
+            if(coins == capital||symbol=='z') {
+                for (int indexObject = 0; indexObject < objects.size(); indexObject++) {
+                    block = objects.get(indexObject);
+                    if(symbol!='z'){
+                    if (block.blockType == 'd') {
+                        root.getChildren().remove(block.imageView);
+                        objects.remove(indexObject);
+                    }}else {
+                        if(block.blockType=='z'){
+                        root.getChildren().remove(block.imageView);
+                        objects.remove(indexObject);}}
+                }
+            }
+            labelCoin.setText("bitCoins: "+capital+"/"+coins);
+            root.getChildren().remove(removeBlock.imageView);
+            objects.remove(removeIndex);
+        }
     }
 
     public void update() {
