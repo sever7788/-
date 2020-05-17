@@ -28,6 +28,9 @@ public class Block {
                 break;
             case '2':
                 imageView.setViewport(new Rectangle2D(417,193, 29,29));
+                imageView.setFitWidth(22);
+                imageView.setFitHeight(22);
+                imageView.setTranslateX(imageView.getTranslateX()+4);imageView.setTranslateY(imageView.getTranslateY()+4);
                 break;
             case 't':
                 imageView.setViewport(new Rectangle2D(32,32, width,height));

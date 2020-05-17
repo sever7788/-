@@ -26,9 +26,9 @@ public class MapData {
                 "1111111111111111111111111111",
                 "1000000000000000000000000001",
                 "10111110111111011111011111G1",
-                "1010000000000000000000z00101",
+                "1010z000000000000000000z0101",
                 "1010111111111101111111110101",
-                "1010000000000000000000000101",
+                "10100G0000000000000000000101",
                 "1010111011101111011101110101",
                 "1010111011101  1011101110101",
                 "100000000000t  t000000000001",
@@ -36,9 +36,9 @@ public class MapData {
                 "1010000000000000000000000101",
                 "1010111111111111111111110101",
                 "1010100000000000000000010101",
-                "1010101111110111011111010101",
-                "1g0000000000011100G000000001",
-                "1011111111110000011111111101",
+                "1g101011111101110111110101g1",
+                "100000000000011100G000000001",
+                "11111111111100z0011111111101",
                 "1111111111111111111111111111"
         };
     }
@@ -48,8 +48,10 @@ public class MapData {
         for(int yBlock = 0; yBlock < map.length; yBlock++)
             for(int xBlock = 0; xBlock < map[yBlock].length(); xBlock++){
                 symbol = map[yBlock].charAt(xBlock);
-                block = new Block(symbol, xBlock, yBlock+1, pane);
-                objects.add(block);
+                if(symbol != 'G' && symbol != 'g') {
+                    block = new Block(symbol, xBlock, yBlock + 1, pane);
+                    objects.add(block);
+                }
                 if(symbol=='0'){
                     game.coins++;
                     block = new Block('2', xBlock, yBlock+1, pane);
@@ -60,8 +62,11 @@ public class MapData {
                     objects.add(block);
                 }
                 if(symbol=='g' || symbol == 'G'){
+                    game.coins++;
                     block = new Block('0', xBlock, yBlock+1, pane);
+                    objects.add(block);
                     block = new Block('2', xBlock, yBlock+1, pane);
+                    objects.add(block);
                 }
             }
         for(int yBlock = 0; yBlock < map.length; yBlock++)

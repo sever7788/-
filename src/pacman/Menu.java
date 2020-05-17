@@ -24,9 +24,11 @@ public class Menu {
     Game game;
     Stage stage;
     Scene scene;
+    Replay replay;
     public Menu(Stage stage, Game game){
         this.game = game;
         this.stage = stage;
+        this.replay = null;
     }
     public void initMenu(){
         StackPane root = new StackPane();
@@ -43,15 +45,28 @@ public class Menu {
         StackPane.setAlignment(imgLogo, Pos.TOP_CENTER);
 
         MenuItem newGame = new MenuItem("НОВАЯ ИГРА");
+        MenuItem replayGame = new MenuItem("ПОВТОР");
         MenuItem exitGame = new MenuItem("ВЫХОД");
         SubMenu mainMenu = new SubMenu(
-                newGame, exitGame
+                newGame, replayGame, exitGame
         );
         MenuBox menuBox = new MenuBox(mainMenu);
         menuBox.setTranslateX(250);
         menuBox.setTranslateY(200);
 
-        newGame.setOnMouseClicked(event->{game = new Game(stage, this);game.initGame();});
+        newGame.setOnMouseClicked(event->{
+            replay = new Replay();
+            game = new Game(stage, this, replay);
+            game.initGame();
+            replay = null;
+        });
+        replayGame.setOnMouseClicked(event->{
+            replay = new Replay();
+            game = new Game(stage, this, replay);
+            game.flReplay = true;
+            game.initGame();
+            replay = null;
+        });
         exitGame.setOnMouseClicked(event->System.exit(0));
         root.getChildren().addAll(imgFon,imgLogo, menuBox);
 

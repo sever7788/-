@@ -48,4 +48,16 @@ public class NPC {
             else imageView.setTranslateY(imageView.getTranslateY() - 1);
         }
     }
+    public double getX(){
+        return imageView.getTranslateX();
+    }
+    public double getY(){
+        return imageView.getTranslateY();
+    }
+    public void setX(double x){
+       imageView.setTranslateX(x);
+    }
+    public void setY(double y){
+        imageView.setTranslateY(y);
+    }
 }

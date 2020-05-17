@@ -27,9 +27,11 @@ public class Ghost extends NPC{
         this.game = game;
         this.objects = objects;
         initGhost();
-        th = new Thread(task);
-        th.setDaemon(false);
-        th.start();
+        if(!game.flReplay) {
+            th = new Thread(task);
+            th.setDaemon(false);
+            th.start();
+        }
     }
 
     public void initGhost(){
@@ -64,13 +66,13 @@ public class Ghost extends NPC{
     }
 
     public void logicsA(){
-        if(game.ghostMode){
+        if(game.ghostMode&&!mode){
             mode= true;
             speed *= -1;
             counter = 0;
-            game.ghostMode = false;
         }
         if(counter==300 && mode == true){
+            game.ghostMode = false;
             mode = false;
             speed*=-1;
         }

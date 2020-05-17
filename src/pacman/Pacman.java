@@ -40,7 +40,6 @@ public class Pacman extends NPC {
     }
 
 
-
     public boolean isPressed(KeyCode key) {
         return keys.getOrDefault(key, false);
     }
